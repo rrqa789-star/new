@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Me - Personal Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #121212;
+            --success: #4cc9f0;
+            --gray: #adb5bd;
+            --section-bg: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --glass-effect: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: #ffffff; /* Changed to white */
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--glass-effect);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--card-shadow);
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #f72585, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 300;
+        }
+        
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            background: var(--glass-effect);
+            border-radius: 18px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--success));
+            border-radius: 18px 18px 0 0;
+        }
+        
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(31, 38, 135, 0.5);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .section-content {
+            min-height: 160px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1rem;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(to right, var(--primary), #5e60ce);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(to right, var(--accent), #d00000);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-add {
+            background: linear-gradient(to right, var(--success), #74b9ff);
+            color: var(--dark);
+            margin: 40px auto;
+            display: block;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.4);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--dark);
+            border-radius: 16px;
+            padding: 35px;
+            width: 90%;
+            max-width: 650px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalSlideIn 0.4s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .close:hover {
+            color: var(--light);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 18px;
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 25px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--success);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: var(--gray);
+            font-size: 0.95rem;
+            background: var(--glass-effect);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .btn-add {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-rocket"></i> NEW ME</h1>
+            <p class="subtitle">Your personal development companion</p>
+        </header>
+        
+        <div class="sections-grid">
+            <!-- Read Everyday Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-book-open"></i> Read Everyday</h2>
+                </div>
+                <div class="section-content" id="readEverydayContent">
+                    (write / edit / delete your own rules here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('readEveryday')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('readEveryday')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- When in Doubt Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-question-circle"></i> When in Doubt</h2>
+                </div>
+                <div class="section-content" id="whenInDoubtContent">
+                    (write / edit / delete your notes here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('whenInDoubt')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('whenInDoubt')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Learnings Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Learnings</h2>
+                </div>
+                <div class="section-content" id="learningsContent">
+                    (write / edit / delete your learnings here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('learnings')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('learnings')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Behavior Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-chart-line"></i> Behavior</h2>
+                </div>
+                <div class="section-content" id="behaviorContent">
+                    (write / edit / delete observations here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('behavior')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('behavior')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Problem A Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Problem A</h2>
+                </div>
+                <div class="section-content" id="problemAContent">
+                    (write / edit / delete problem here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('problemA')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('problemA')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Problem B Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Problem B</h2>
+                </div>
+                <div class="section-content" id="problemBContent">
+                    (write / edit / delete problem here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('problemB')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('problemB')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Purpose Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-star"></i> My Purpose</h2>
+                </div>
+                <div class="section-content" id="purposeContent">
+                    (write / edit / delete purpose here)
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-edit" onclick="openEditor('purpose')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-delete" onclick="deleteContent('purpose')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-add" onclick="addNewSection()">
+            <i class="fas fa-plus"></i> Add New Section
+        </button>
+        
+        <footer>
+            <p>New Me App | Designed for Personal Growth and Development</p>
+        </footer>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Edit Section</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <textarea id="editor" placeholder="Write your content here..."></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-delete" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-edit" onclick="saveContent()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentSection = null;
+        
+        // Open editor for a section
+        function openEditor(sectionId) {
+            currentSection = sectionId;
+            const contentElement = document.getElementById(`${sectionId}Content`);
+            document.getElementById('editor').value = contentElement.textContent;
+            
+            // Set modal title based on section
+            const sectionTitles = {
+                'readEveryday': 'Read Everyday',
+                'whenInDoubt': 'When in Doubt',
+                'learnings': 'Learnings',
+                'behavior': 'Behavior',
+                'problemA': 'Problem A',
+                'problemB': 'Problem B',
+                'purpose': 'My Purpose'
+            };
+            
+            document.getElementById('modalTitle').textContent = `Edit ${sectionTitles[sectionId]}`;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Save content
+        function saveContent() {
+            if (currentSection) {
+                const content = document.getElementById('editor').value;
+                document.getElementById(`${currentSection}Content`).textContent = content;
+                
+                // Save to localStorage
+                localStorage.setItem(currentSection, content);
+                
+                closeModal();
+            }
+        }
+        
+        // Delete content
+        function deleteContent(sectionId) {
+            if (confirm('Are you sure you want to delete this content?')) {
+                document.getElementById(`${sectionId}Content`).textContent = '(write / edit / delete your content here)';
+                
+                // Remove from localStorage
+                localStorage.removeItem(sectionId);
+            }
+        }
+        
+        // Add new section (placeholder functionality)
+        function addNewSection() {
+            alert('This would open a dialog to create a new custom section in a full implementation.');
+        }
+        
+        // Load saved content from localStorage
+        function loadSavedContent() {
+            const sections = [
+                'readEveryday', 'whenInDoubt', 'learnings', 
+                'behavior', 'problemA', 'problemB', 'purpose'
+            ];
+            
+            sections.forEach(section => {
+                const savedContent = localStorage.getItem(section);
+                if (savedContent) {
+                    document.getElementById(`${section}Content`).textContent = savedContent;
+                }
+            });
+        }
+        
+        // Initialize the app
+        window.onload = function() {
+            loadSavedContent();
+            
+            // Close modal if clicked outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('editModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        };
+    </script>
+</body>
+</html>
