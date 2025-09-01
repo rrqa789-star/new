@@ -28,7 +28,7 @@
         }
         
         body {
-            background: #ffffff; /* Changed to white */
+            background: #ffffff;
             color: var(--dark);
             min-height: 100vh;
             padding: 20px;
@@ -131,6 +131,16 @@
             line-height: 1.7;
             color: rgba(0, 0, 0, 0.9);
             font-size: 1rem;
+        }
+        
+        .section-content ul {
+            padding-left: 20px;
+            list-style-type: disc;
+            margin: 0;
+        }
+        
+        .section-content li {
+            margin-bottom: 8px;
         }
         
         .section-actions {
@@ -308,7 +318,7 @@
                     <h2 class="section-title"><i class="fas fa-book-open"></i> Read Everyday</h2>
                 </div>
                 <div class="section-content" id="readEverydayContent">
-                    (write / edit / delete your own rules here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('readEveryday')">
@@ -326,7 +336,7 @@
                     <h2 class="section-title"><i class="fas fa-question-circle"></i> When in Doubt</h2>
                 </div>
                 <div class="section-content" id="whenInDoubtContent">
-                    (write / edit / delete your notes here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('whenInDoubt')">
@@ -344,7 +354,7 @@
                     <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Learnings</h2>
                 </div>
                 <div class="section-content" id="learningsContent">
-                    (write / edit / delete your learnings here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('learnings')">
@@ -362,7 +372,7 @@
                     <h2 class="section-title"><i class="fas fa-chart-line"></i> Behavior</h2>
                 </div>
                 <div class="section-content" id="behaviorContent">
-                    (write / edit / delete observations here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('behavior')">
@@ -380,7 +390,7 @@
                     <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Problem A</h2>
                 </div>
                 <div class="section-content" id="problemAContent">
-                    (write / edit / delete problem here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('problemA')">
@@ -398,7 +408,7 @@
                     <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Problem B</h2>
                 </div>
                 <div class="section-content" id="problemBContent">
-                    (write / edit / delete problem here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('problemB')">
@@ -416,7 +426,7 @@
                     <h2 class="section-title"><i class="fas fa-star"></i> My Purpose</h2>
                 </div>
                 <div class="section-content" id="purposeContent">
-                    (write / edit / delete purpose here)
+                    <ul></ul>
                 </div>
                 <div class="section-actions">
                     <button class="btn btn-edit" onclick="openEditor('purpose')">
@@ -464,7 +474,14 @@
         function openEditor(sectionId) {
             currentSection = sectionId;
             const contentElement = document.getElementById(`${sectionId}Content`);
-            document.getElementById('editor').value = contentElement.textContent;
+            const ul = contentElement.querySelector('ul');
+            
+            // Get all list items and join them into a single string
+            const contentText = Array.from(ul.querySelectorAll('li'))
+                .map(li => li.textContent)
+                .join('\n');
+            
+            document.getElementById('editor').value = contentText;
             
             // Set modal title based on section
             const sectionTitles = {
@@ -490,19 +507,34 @@
         function saveContent() {
             if (currentSection) {
                 const content = document.getElementById('editor').value;
-                document.getElementById(`${currentSection}Content`).textContent = content;
+                const contentElement = document.getElementById(`${currentSection}Content`);
+                const ul = contentElement.querySelector('ul');
+                
+                // Clear existing content
+                ul.innerHTML = '';
+                
+                // Split content by newline and create li elements
+                content.split('\n').forEach(line => {
+                    if (line.trim()) { // Only add non-empty lines
+                        const li = document.createElement('li');
+                        li.textContent = line;
+                        ul.appendChild(li);
+                    }
+                });
+                
+                closeModal();
                 
                 // Save to localStorage
                 localStorage.setItem(currentSection, content);
-                
-                closeModal();
             }
         }
         
         // Delete content
         function deleteContent(sectionId) {
             if (confirm('Are you sure you want to delete this content?')) {
-                document.getElementById(`${sectionId}Content`).textContent = '(write / edit / delete your content here)';
+                const contentElement = document.getElementById(`${sectionId}Content`);
+                const ul = contentElement.querySelector('ul');
+                ul.innerHTML = '';
                 
                 // Remove from localStorage
                 localStorage.removeItem(sectionId);
@@ -524,7 +556,20 @@
             sections.forEach(section => {
                 const savedContent = localStorage.getItem(section);
                 if (savedContent) {
-                    document.getElementById(`${section}Content`).textContent = savedContent;
+                    const contentElement = document.getElementById(`${section}Content`);
+                    const ul = contentElement.querySelector('ul');
+                    
+                    // Clear existing content
+                    ul.innerHTML = '';
+                    
+                    // Split content by newline and create li elements
+                    savedContent.split('\n').forEach(line => {
+                        if (line.trim()) { // Only add non-empty lines
+                            const li = document.createElement('li');
+                            li.textContent = line;
+                            ul.appendChild(li);
+                        }
+                    });
                 }
             });
         }
